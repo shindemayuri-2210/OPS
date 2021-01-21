@@ -1,28 +1,76 @@
-import { useRef } from 'react';
+import React from 'react';
+import { Field, reduxForm } from 'redux-form';
 import { Button } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import './ApplicantRegistrationForm.css'
 
 
-const ApplicantRegistrationForm = (props) => {
-    const applicantEmailIdRef = useRef(null);
-    const applicantFirstNameRef = useRef(null);
-    const applicantLastNameRef = useRef(null);
-    const applicantPasswordRef = useRef(null);
+const validate = values => {
+    const errors = {}
+    if (!values.firstName) {
+      errors.firstName = 'Required'
+    } else if (values.firstName.length < 2)  {
+      errors.firstName = 'Minimum be 2 characters or more'
+    }
+    if (!values.email) {
+      errors.email = 'Required'
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+      errors.email = 'Invalid email address'
+    }
+    if (!values.lastName) {
+        errors.lastName = 'Required'
+      } else if (values.lastName.length < 2) {
+        errors.lastName = 'Minimum be 2 characters or more'
+      }
+    if(!values.password) {
+        errors.password= 'Required'
+    }else if (!/^([a-zA-Z0-9@#*]{8,15})$/i.test(values.password)){
+        errors.password='Invalid password'
+    }
+
+    return errors
+  }
 
 
-    
-    return <div className="centered"><h1>New Registration Form</h1><br></br>
-    <h4> 
-        Email Id: {'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}<input type="text" ref={applicantEmailIdRef}/><br/><br/>
-        First Name: {'\u00A0'}{'\u00A0'}{'\u00A0'}<input type="text" ref={applicantFirstNameRef} /><br/><br/>
-        Last Name: {'\u00A0'}{'\u00A0'}{'\u00A0'}<input type="text" ref={applicantLastNameRef} /><br/><br/>
-        Password: {'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}<input type="text" ref={applicantPasswordRef} /><br/><br/><br/>
-        {'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}
-        <Button variant="primary" name="register" value="NEW REGISTRATION">REGISTER</Button><br/><br/>
-        Already registered?{'\u00A0'}{'\u00A0'} <Button variant="primary" name="login" value="LOGIN" >LOGIN</Button>
-    </h4>
+const renderField = ({ input, label, type, meta: { touched, error, warning } }) => (
+    <div>
+      <label className="control-label">{label}</label>
+      <div>
+        <input {...input} placeholder={label} type={type} className="form-control" />
+        {touched && ((error && <span className="text-danger">{error}</span>) || (warning && <span>{warning}</span>))}
+      </div>
     </div>
+  )
+
+let ApplicantRegistrationForm = props => {
+  const { handleSubmit, pristine, submitting } = props;
+  return (
+    <form onSubmit={ handleSubmit }>
+        <h4>Registration Form</h4>
+        <br/>
+      <div className="form-group">
+        < Field name="firstName" component={renderField} label="First Name"/>
+      </div>
+      <div className="form-group">
+        <Field name="lastName" component={renderField} label="Last Name" />
+      </div>
+      <div className="form-group">
+        <Field name="email" component={renderField} label="Email" />
+      </div>
+      <div className="form-group">
+        <Field name="password" component={renderField} label="Password" />
+      </div>
+      <div className="form-group">
+        <Button type="submit" disabled={pristine || submitting} className="btn btn-primary">Submit</Button>
+      </div>
+      Already registered? <Button variant="primary" name="login" value="LOGIN">LOGIN</Button>
+    </form>
+  )
 }
+ApplicantRegistrationForm = reduxForm({
+  form: 'contact',
+  validate,
+})(ApplicantRegistrationForm);
 
 export default ApplicantRegistrationForm;
+
+
