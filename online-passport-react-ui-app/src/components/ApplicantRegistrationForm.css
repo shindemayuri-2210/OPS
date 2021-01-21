@@ -1,0 +1,10 @@
+.centered{
+    
+    height:500px;
+    width: 800px;
+    background:bisque;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    text-align: center;
+}
