@@ -578,7 +578,7 @@ class Form extends React.Component {
               <label htmlFor="motherFirstName">Mother's First Name</label>
               <input
                 className={formErrors.motherFirstName.length > 0 ? "error" : null}
-                placeholder="Mother's First Name"
+                placeholder="Mother's   First Name"
                 type="text"
                 name="motherFirstName"
                 noValidate
