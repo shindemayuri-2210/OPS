@@ -1,17 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import App1 from './App1';
 import reportWebVitals from './reportWebVitals';
-import 'bootstrap/dist/css/bootstrap.min.css';  
+import { createStore, applyMiddleware } from 'redux';
+import AppointmentReducer from './reducers/appointment_reducer';
+import ReduxThunk from 'redux-thunk';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+import { composeWithDevTools } from 'redux-devtools-extension';
 
-
-
-
-
+const appointmentStore = createStore(AppointmentReducer, composeWithDevTools(applyMiddleware(ReduxThunk)));
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider store={appointmentStore}>
+      <BrowserRouter>
+    <App1 store={appointmentStore}/>
+    </BrowserRouter>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
