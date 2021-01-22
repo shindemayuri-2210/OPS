@@ -1,0 +1,16 @@
+.centered{
+    height:500px;
+    width: 800px;
+    background:bisque;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    text-align: center;
+}
+.form-group{
+   display:flex;
+   flex-flow:row wrap;
+   margin: 0 -1rem 1rem -1rem;
+   justify-content:center;
+   text-align:center;
+}
