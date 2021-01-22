@@ -3,15 +3,21 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import 'bootstrap/dist/css/bootstrap.min.css';  
+import {createStore, combineReducers} from 'redux';
+import {Provider }from 'react-redux';
+import {reducer as formReducer } from 'redux-form';
+import 'bootstrap/dist/css/bootstrap.min.css'
+const rootReducer=combineReducers({
+  form:formReducer
+});
 
-
-
-
+const store=createStore(rootReducer);
 
 ReactDOM.render(
   <React.StrictMode>
+    <Provider store={store}>
     <App />
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

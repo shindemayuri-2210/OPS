@@ -1,76 +1,192 @@
 import React from 'react';
-import { Field, reduxForm } from 'redux-form';
 import { Button } from 'react-bootstrap';
 import './ApplicantRegistrationForm.css'
 
 
-const validate = values => {
-    const errors = {}
-    if (!values.firstName) {
-      errors.firstName = 'Required'
-    } else if (values.firstName.length < 2)  {
-      errors.firstName = 'Minimum be 2 characters or more'
-    }
-    if (!values.email) {
-      errors.email = 'Required'
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-      errors.email = 'Invalid email address'
-    }
-    if (!values.lastName) {
-        errors.lastName = 'Required'
-      } else if (values.lastName.length < 2) {
-        errors.lastName = 'Minimum be 2 characters or more'
-      }
-    if(!values.password) {
-        errors.password= 'Required'
-    }else if (!/^([a-zA-Z0-9@#*]{8,15})$/i.test(values.password)){
-        errors.password='Invalid password'
-    }
+const emailRegex = RegExp(
+  /^[a-zA-Z0-9.!#$%&’+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)$/
+);
+const passwordRegex = RegExp(
+  /^([a-zA-Z0-9@#*]{8,15})$/
+);
 
-    return errors
+
+const formValid = ({ formErrors, ...rest }) => {
+  let valid = true;
+
+  // validate form errors being empty
+  Object.values(formErrors).forEach(val => {
+    val.length > 0 && (valid = false);
+  });
+
+  // validate the form was filled out
+  Object.values(rest).forEach(val => {
+    val === null && (valid = false);
+  });
+
+  return valid;
+};
+
+
+
+class ApplicantRegistrationForm extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+     
+      firstName: null,
+      lastName: null,
+      email: null,
+      password: null,
+      formErrors: {
+      
+           firstName: "",
+           lastName: "",
+           email: "",
+           password: "",
+        
+      }
+    };
   }
 
+  handleSubmit = e => {
+    e.preventDefault();
 
-const renderField = ({ input, label, type, meta: { touched, error, warning } }) => (
-    <div>
-      <label className="control-label">{label}</label>
-      <div>
-        <input {...input} placeholder={label} type={type} className="form-control" />
-        {touched && ((error && <span className="text-danger">{error}</span>) || (warning && <span>{warning}</span>))}
-      </div>
-    </div>
-  )
+    if (formValid(this.state)) {
+      console.log(`
+        --SUBMITTING--
+        First Name: ${this.state.firstName}
 
-let ApplicantRegistrationForm = props => {
-  const { handleSubmit, pristine, submitting } = props;
-  return (
-    <form onSubmit={ handleSubmit }>
-        <h4>Registration Form</h4>
-        <br/>
-      <div className="form-group">
-        < Field name="firstName" component={renderField} label="First Name"/>
-      </div>
-      <div className="form-group">
-        <Field name="lastName" component={renderField} label="Last Name" />
-      </div>
-      <div className="form-group">
-        <Field name="email" component={renderField} label="Email" />
-      </div>
-      <div className="form-group">
-        <Field name="password" component={renderField} label="Password" />
-      </div>
-      <div className="form-group">
-        <Button type="submit" disabled={pristine || submitting} className="btn btn-primary">Submit</Button>
-      </div>
-      Already registered? <Button variant="primary" name="login" value="LOGIN">LOGIN</Button>
-    </form>
-  )
+        Last Name: ${this.state.lastName}
+        Email: ${this.state.email}
+        Password: ${this.state.password}
+      `);
+    } else {
+      console.error("FORM INVALID - DISPLAY ERROR MESSAGE");
+    }
+  };
+
+  handleChange = e => {
+    e.preventDefault();
+    const { name, value } = e.target;
+    let formErrors = { ...this.state.formErrors };
+
+    switch (name) {
+        
+
+      case "firstName":
+        formErrors.firstName =
+          value.length < 3 ? "minimum 3 characaters required" : "";
+        break;
+
+      case "lastName":
+        formErrors.lastName =
+          value.length < 3 ? "minimum 3 characaters required" : "";
+        break;
+
+        
+      case "email":
+        formErrors.email = emailRegex.test(value)
+          ? ""
+          : "invalid email address";
+        break;
+      case "password":
+        formErrors.password =passwordRegex.test(value)
+        ? ""
+        : "invalid password";
+        break;
+      default:
+        break;
+    }
+
+    this.setState({ formErrors, [name]: value }, () => console.log(this.state));
+  };
+
+  
+
+  render() {
+    const { formErrors } = this.state;
+
+    return (
+      
+      <div className="wrapper">
+      <div className="form-wrapper">
+      
+          <form onSubmit={this.handleSubmit} noValidate>
+          
+          <h1>Registration form</h1>
+          
+            <div className="firstName">
+              <label htmlFor="firstName">First Name</label>
+              <input
+                className={formErrors.firstName.length > 0 ? "error" : null}
+                placeholder="First Name"
+                type="text"
+                name="firstName"
+                noValidate
+                onChange={this.handleChange}
+              />
+              {formErrors.firstName.length > 0 && (
+                <span className="errorMessage">{formErrors.firstName}</span>
+              )}
+            </div>
+
+            <div className="lastName">
+              <label htmlFor="lastName">Last Name</label>
+              <input
+                className={formErrors.lastName.length > 0 ? "error" : null}
+                placeholder="Last Name"
+                type="text"
+                name="lastName"
+                noValidate
+                onChange={this.handleChange}
+              />
+              {formErrors.lastName.length > 0 && (
+                <span className="errorMessage">{formErrors.lastName}</span>
+              )}
+            </div>
+            
+            <div className="email">
+              <label htmlFor="email">Email</label>
+              <input
+                className={formErrors.email.length > 0 ? "error" : null}
+                placeholder="Email"
+                type="email"
+                name="email"
+                noValidate
+                onChange={this.handleChange}
+              />
+              {formErrors.email.length > 0 && (
+                <span className="errorMessage">{formErrors.email}</span>
+              )}
+            </div>
+            <div className="password">
+              <label htmlFor="password">Password</label>
+              <input
+                className={formErrors.password.length > 0 ? "error" : null}
+                placeholder="Password"
+                type="password"
+                name="password"
+                noValidate
+                onChange={this.handleChange}
+              />
+              {formErrors.password.length > 0 && (
+                <span className="errorMessage">{formErrors.password}</span>
+              )}
+            </div>
+
+            <Button variant="primary" name="register" value="REGISTER">REGISTER</Button>
+              
+             <br/> <br/>Already registered? <Button variant="primary" name="login" value="LOGIN">LOGIN</Button>
+
+          
+          </form>
+          </div>
+          </div>
+        
+    );
+  }
 }
-ApplicantRegistrationForm = reduxForm({
-  form: 'contact',
-  validate,
-})(ApplicantRegistrationForm);
 
 export default ApplicantRegistrationForm;
-
-

@@ -1,8 +1,9 @@
 import React, { Fragment, useState } from 'react';
 import Message from './Message';
 import Progress from './Progress';
-import axios from 'axios';
 import Theme from './BirthProof';
+import  './Document.css';
+import axios from 'axios';
 
 const FileUpload = () => {
   const [file, setFile] = useState('');
@@ -55,13 +56,13 @@ const FileUpload = () => {
   return (
     <Fragment>
 
-      <h1 className="shadow-lg p-3 mb-5 bg-white rounded" >Documents</h1>
+      <h1 className="shadow-lg p-3 mb-5 bg-white border border-danger rounded heading" >Documents</h1>
       <div className="container-fluid  ">
 
         <form onSubmit={onSubmit}>
           <div className="row mt-2 ">
 
-            <div className="col-sm-3 text-info" > <Theme /></div>
+            <div className="col-sm-3 text-danger" > <Theme /></div>
 
             <div className="col-sm-6 mt-3 form-control float-left shadow-lg p-3 mb-5 bg-black border border-dark rounded ">
 

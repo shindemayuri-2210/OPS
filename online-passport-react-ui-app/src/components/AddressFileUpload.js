@@ -1,8 +1,8 @@
 import React, { Fragment, useState } from 'react';
 import Message from './Message';
 import Progress from './Progress';
-import axios from 'axios';
 import Theme from './AddressProof';
+import axios from 'axios';
 
 const AddressFileUpload = () => {
   const [file, setFile] = useState('');

@@ -1,23 +1,150 @@
-import { useRef } from 'react';
+import React from 'react';
 import { Button } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './ApplicantRegistrationForm.css'
+import './LoginForm.css'
 
-const LoginForm = (props) => {
-    const applicantEmailIdRef = useRef(null);
-    const applicantPasswordRef = useRef(null);
 
-   
-    return <div className="centered"><h1>Login</h1><br></br>
-    <h4> 
-        Email Id: {'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}<input type="text" ref={applicantEmailIdRef}/><br/><br/>
+
+const emailRegex = RegExp(
+  /^[a-zA-Z0-9.!#$%&’+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)$/
+);
+const passwordRegex = RegExp(
+  /^([a-zA-Z0-9@#*]{8,15})$/
+);
+
+
+const formValid = ({ formErrors, ...rest }) => {
+  let valid = true;
+
+  // validate form errors being empty
+  Object.values(formErrors).forEach(val => {
+    val.length > 0 && (valid = false);
+  });
+
+  // validate the form was filled out
+  Object.values(rest).forEach(val => {
+    val === null && (valid = false);
+  });
+
+  return valid;
+};
+
+
+
+class LoginForm extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+     
+      
+      email: null,
+      password: null,
+      formErrors: {
+      
+           
+           email: "",
+           password: "",
         
-        Password: {'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}<input type="text" ref={applicantPasswordRef} /><br/><br/><br/>
-        {'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}
-        <Button variant="primary" name="login" value="LOGIN">LOGIN</Button><br/><br/>
-       
-    </h4>
-    </div>
+      }
+    };
+  }
+
+  handleSubmit = e => {
+    e.preventDefault();
+
+    if (formValid(this.state)) {
+      console.log(`
+        --SUBMITTING--
+        Email: ${this.state.email}
+        Password: ${this.state.password}
+      `);
+    } else {
+      console.error("FORM INVALID - DISPLAY ERROR MESSAGE");
+    }
+  };
+
+  handleChange = e => {
+    e.preventDefault();
+    const { name, value } = e.target;
+    let formErrors = { ...this.state.formErrors };
+
+    switch (name) {
+    
+
+        
+      case "email":
+        formErrors.email = emailRegex.test(value)
+          ? ""
+          : "invalid email address";
+        break;
+      case "password":
+        formErrors.password =passwordRegex.test(value)
+        ? ""
+        : "invalid password";
+        break;
+      default:
+        break;
+    }
+
+    this.setState({ formErrors, [name]: value }, () => console.log(this.state));
+  };
+
+  
+
+  render() {
+    const { formErrors } = this.state;
+
+    return (
+      
+      <div className="wrapper">
+      <div className="form-wrapper">
+      
+          <form onSubmit={this.handleSubmit} noValidate>
+          
+          <h2>Login form</h2>
+          
+            
+            
+            <div className="email">
+              <label htmlFor="email">Email</label>
+              <input
+                className={formErrors.email.length > 0 ? "error" : null}
+                placeholder="Email"
+                type="email"
+                name="email"
+                noValidate
+                onChange={this.handleChange}
+              />
+              {formErrors.email.length > 0 && (
+                <span className="errorMessage">{formErrors.email}</span>
+              )}
+            </div>
+            <div className="password">
+              <label htmlFor="password">Password</label>
+              <input
+                className={formErrors.password.length > 0 ? "error" : null}
+                placeholder="Password"
+                type="password"
+                name="password"
+                noValidate
+                onChange={this.handleChange}
+              />
+              {formErrors.password.length > 0 && (
+                <span className="errorMessage">{formErrors.password}</span>
+              )}
+            </div>
+
+           
+              
+             <Button variant="primary" name="login" value="LOGIN">LOGIN</Button>
+
+          
+          </form>
+          </div>
+          </div>
+        
+    );
+  }
 }
 
 export default LoginForm;
