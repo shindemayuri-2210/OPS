@@ -19,7 +19,7 @@ const EditAppointmentForm = (props) => {
     return (
         <div>
             <pre>
-            <h1><i><center><b>Edit Appoitnemnt</b></center></i></h1>
+            <h1><i><center><b>Edit Appointment</b></center></i></h1>
 
             <h3><center>
                         Appointment ID      : <input type="text" readOnly= {true} ref={appointmentIdRef} value={props.appointment.appointmentId}/><br/><br/>
