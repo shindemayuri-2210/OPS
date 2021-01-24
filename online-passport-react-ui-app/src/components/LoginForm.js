@@ -8,7 +8,7 @@ const emailRegex = RegExp(
   /^[a-zA-Z0-9.!#$%&’+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)$/
 );
 const passwordRegex = RegExp(
-  /^([a-zA-Z0-9@#*]{8,15})$/
+  /^([a-zA-Z0-9@#*]{8,})$/
 );
 
 
@@ -75,12 +75,12 @@ class LoginForm extends React.Component {
       case "email":
         formErrors.email = emailRegex.test(value)
           ? ""
-          : "invalid email address";
+          : "*Invalid email address";
         break;
       case "password":
         formErrors.password =passwordRegex.test(value)
         ? ""
-        : "invalid password";
+        : "*Invalid password! Minimum 8 characters required";
         break;
       default:
         break;
@@ -103,13 +103,13 @@ class LoginForm extends React.Component {
           
           <h2>Login form</h2>
           
-            
+            <br/>
+            <br/>
             
             <div className="email">
               <label htmlFor="email">Email</label>
               <input
                 className={formErrors.email.length > 0 ? "error" : null}
-                placeholder="Email"
                 type="email"
                 name="email"
                 noValidate
@@ -123,7 +123,6 @@ class LoginForm extends React.Component {
               <label htmlFor="password">Password</label>
               <input
                 className={formErrors.password.length > 0 ? "error" : null}
-                placeholder="Password"
                 type="password"
                 name="password"
                 noValidate

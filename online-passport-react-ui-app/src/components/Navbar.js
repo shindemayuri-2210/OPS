@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+/*import React, { Component } from 'react';
 import { MenuItems } from "./MenuItems"
-/*import { Button }from "./Button"*/
+/*import { Button }from "./Button"
 import './Navbar.css'
 
 
@@ -41,4 +41,39 @@ class Navbar extends Component{
         )
     }
 }
-export default Navbar
+export default Navbar*/
+
+import React from 'react';
+import { Link } from 'react-router-dom';
+class Navbar extends React.Component{
+    render()
+    {
+        return(
+            <div>
+            <nav className="navbar navbar-expand-sm bg-primary navbar-dark">
+            <ul className="navbar-nav">  
+                <li> 
+                    <h5 className="text-white mt-2">Online Passport System</h5>
+                </li>
+                <li className="nav-item ml-3">
+                    <Link className="nav-link font-weight-bold mt-1" to="/HomePage">Home</Link>
+                </li>
+            </ul> 
+            <ul className="navbar-nav ml-auto">
+                <li className="nav-item">
+                    <Link className="nav-link" to="/applicantRegistrationForm">SignUp</Link>
+                </li>
+                <li className="nav-item">
+                    <Link className="nav-link" to="/LoginForm">Login</Link>
+                </li>
+                <li className="nav-item">
+                    <Link className="nav-link" to="/login">Contact Us</Link>
+                </li>
+
+            </ul>
+            </nav>
+            </div>
+        );
+    }
+}
+export default Navbar;

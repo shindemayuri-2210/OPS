@@ -1,13 +1,13 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
-import './ApplicantRegistrationForm.css'
+import './ApplicationForm.css'
 
 
 const emailRegex = RegExp(
   /^[a-zA-Z0-9.!#$%&’+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)$/
 );
 const passwordRegex = RegExp(
-  /^([a-zA-Z0-9@#*]{8,15})$/
+  /^([a-zA-Z0-9@#*]{8,})$/
 );
 
 
@@ -77,24 +77,24 @@ class ApplicantRegistrationForm extends React.Component {
 
       case "firstName":
         formErrors.firstName =
-          value.length < 3 ? "minimum 3 characaters required" : "";
+          value.length < 3 ? "*Minimum 3 characters required" : "";
         break;
 
       case "lastName":
         formErrors.lastName =
-          value.length < 3 ? "minimum 3 characaters required" : "";
+          value.length < 3 ? "*Minimum 3 characters required" : "";
         break;
 
         
       case "email":
         formErrors.email = emailRegex.test(value)
           ? ""
-          : "invalid email address";
+          : "*Invalid email address";
         break;
       case "password":
         formErrors.password =passwordRegex.test(value)
         ? ""
-        : "invalid password";
+        : "*Invalid password! Minimum 8 characters required";
         break;
       default:
         break;
@@ -114,14 +114,11 @@ class ApplicantRegistrationForm extends React.Component {
       <div className="form-wrapper">
       
           <form onSubmit={this.handleSubmit} noValidate>
-          
-          <h1>Registration form</h1>
-          
+          <h2>Registration form</h2>
             <div className="firstName">
               <label htmlFor="firstName">First Name</label>
               <input
                 className={formErrors.firstName.length > 0 ? "error" : null}
-                placeholder="First Name"
                 type="text"
                 name="firstName"
                 noValidate
@@ -136,7 +133,6 @@ class ApplicantRegistrationForm extends React.Component {
               <label htmlFor="lastName">Last Name</label>
               <input
                 className={formErrors.lastName.length > 0 ? "error" : null}
-                placeholder="Last Name"
                 type="text"
                 name="lastName"
                 noValidate
@@ -151,7 +147,6 @@ class ApplicantRegistrationForm extends React.Component {
               <label htmlFor="email">Email</label>
               <input
                 className={formErrors.email.length > 0 ? "error" : null}
-                placeholder="Email"
                 type="email"
                 name="email"
                 noValidate
@@ -165,7 +160,6 @@ class ApplicantRegistrationForm extends React.Component {
               <label htmlFor="password">Password</label>
               <input
                 className={formErrors.password.length > 0 ? "error" : null}
-                placeholder="Password"
                 type="password"
                 name="password"
                 noValidate
@@ -175,10 +169,8 @@ class ApplicantRegistrationForm extends React.Component {
                 <span className="errorMessage">{formErrors.password}</span>
               )}
             </div>
-
             <Button variant="primary" name="register" value="REGISTER">REGISTER</Button>
-              
-             <br/> <br/>Already registered? <Button variant="primary" name="login" value="LOGIN">LOGIN</Button>
+            {'\u00A0'}{'\u00A0'}Already registered?{'\u00A0'}{'\u00A0'} <Button variant="primary" name="login" value="LOGIN">LOGIN</Button>
 
           
           </form>

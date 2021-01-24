@@ -233,7 +233,7 @@ class Form extends React.Component {
       
       <div className="wrapper">
       <div className="form-wrapper">
-      
+           
           <form onSubmit={this.handleSubmit} noValidate>
           
           <h1>NEW PASSPORT APPLICATION</h1>
