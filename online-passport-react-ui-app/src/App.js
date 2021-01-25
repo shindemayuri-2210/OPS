@@ -1,4 +1,21 @@
-import './App.css';
+import AppM from './AppM';
+
+
+function App() {
+  return (
+    <div className="App">
+<AppM/>
+    </div>
+
+
+
+
+
+  );
+}
+
+export default App;
+/*
 import Document from './components/Document';
 import ApplicantRegistrationForm from "./components/ApplicantRegistrationForm";
 import Navbar from "./components/Navbar";
@@ -8,11 +25,6 @@ import { BrowserRouter } from "react-router-dom";
 import PassportApplicationForm from "./components/PassportApplicationForm"
 import PhotoSign from './components/Photo&Sign';
 import HomePage from './components/HomePage';
-
-function App() {
-  return (
-    <div className="App">
-
       <BrowserRouter>
         
           <Navbar />
@@ -32,13 +44,4 @@ function App() {
           </div>
         
       </BrowserRouter>
-    </div>
-
-
-
-
-
-  );
-}
-
-export default App;
+*/

@@ -7,6 +7,10 @@ class AddressProofService {
         createUpload(upload){
             return axios.post(EMPLOYEE_API_BASE_URL_A +"/upload",upload);
         }
+        getAddressApplicants(){
+            return axios.get(EMPLOYEE_API_BASE_URL_A+"/files");
+        }
+        
 /*
     getEmployees(){
         return axios.get(EMPLOYEE_API_BASE_URL);
