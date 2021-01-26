@@ -1,4 +1,21 @@
-import './App.css';
+import AppM from './AppM';
+
+
+function App() {
+  return (
+    <div className="App">
+<AppM/>
+    </div>
+
+
+
+
+
+  );
+}
+
+export default App;
+/*
 import Document from './components/Document';
 import ApplicantRegistrationForm from "./components/ApplicantRegistrationForm";
 import Navbar from "./components/Navbar";
@@ -8,6 +25,7 @@ import { BrowserRouter } from "react-router-dom";
 import PassportApplicationForm from "./components/PassportApplicationForm"
 import PhotoSign from './components/Photo&Sign';
 import HomePage from './components/HomePage';
+<<<<<<< HEAD
 import AdminLogin from './components/AdminLogin';
 import PasswordPolicy from './components/PasswordPolicy';
 import AboutUs from './components/AboutUs';
@@ -18,6 +36,8 @@ function App() {
   return (
     <div className="App">
 
+=======
+>>>>>>> a7ace5a338f4eb1860b9081794fbf4090888b6f3
       <BrowserRouter>
         
           <Navbar />
@@ -42,13 +62,4 @@ function App() {
           </div>
         
       </BrowserRouter>
-    </div>
-
-
-
-
-
-  );
-}
-
-export default App;
+*/
