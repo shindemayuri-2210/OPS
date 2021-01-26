@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from 'react-bootstrap';
 import './LoginForm.css'
 import ApplicantService from '../services/ApplicantService'
-import Img4 from '../Images/img4.jpg'
+import Img13 from '../Images/img13.png'
 
 
 
@@ -32,17 +32,20 @@ const formValid = ({ formErrors, ...rest }) => {
 
 
 
-class LoginForm extends React.Component {
+class AdminLogin extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
      
-      emailId: null,
+      
+      adminId: null,
       password: null,
       applicant:{},
       formErrors: {
-           emailId: "",
+      
+           
+           adminId: "",
            password: "",
         
       }
@@ -51,35 +54,42 @@ class LoginForm extends React.Component {
   }
 
   validateLogin=(e)=>
- {
-   e.preventDefault();
-   let login={
-     emailId:this.state.emailId,
-     password:this.state.password
-   };
-   console.log('login=>' + JSON.stringify(login));
-
-
-   ApplicantService.login(login).then((res)=>{
-     
-
-  if(res.status===200 && res.data.includes("SUCCESSFULL"))
   {
-      this.setState({ applicant: res.data });
-      localStorage.setItem("token",this.state.applicant.applicandId);
-      console.log("applicant=>"+JSON.stringify(this.state.applicant));
-      alert(this.state.applicant);
-      //alert("LOGIN SUCCESSFULL!");
-      this.props.history.push('/PassportApplicationForm');
-  }
-  else{
-    this.setState({applicant:res.data});
-    console.log("applicant=>"+JSON.stringify(this.state.applicant));
-    alert(this.state.applicant);
-  }
-   })
+    e.preventDefault();
+    let adminLogin={
+      adminId:this.state.adminId,
+      password:this.state.password
+    };
+    console.log('adminLogin=>' + JSON.stringify(adminLogin));
+ 
+ 
+    ApplicantService.adminLogin(adminLogin).then((res)=>{
+      
+       if(res.status===200 && res.data.includes("SUCCESSFULL"))
+       {
+          this.setState({ applicant: res.data });
+          localStorage.setItem("token",this.state.applicant.applicandId);
+          console.log("applicant=>"+JSON.stringify(this.state.applicant));
+          alert(this.state.applicant);
+          this.props.history.push('/ListApplicantComponent');
+
+
+       } 
+       else{
+         this.setState({applicant: res.data});
+        console.log("applicant=>"+JSON.stringify(this.state.applicant));
+         alert(this.state.applicant);
+       }
+  }) 
+      
+   }
+    
+   
   
- }
+ 
+   
+ 
+
 
   handleSubmit = e => {
     e.preventDefault();
@@ -87,7 +97,7 @@ class LoginForm extends React.Component {
     if (formValid(this.state)) {
       console.log(`
         --SUBMITTING--
-        Email: ${this.state.emailId}
+        Email: ${this.state.adminId}
         Password: ${this.state.password}
       `);
     } else {
@@ -101,9 +111,11 @@ class LoginForm extends React.Component {
     let formErrors = { ...this.state.formErrors };
 
     switch (name) {
+    
+
         
-      case "emailId":
-        formErrors.emailId = emailRegex.test(value)
+      case "adminId":
+        formErrors.adminId = emailRegex.test(value)
           ? ""
           : "*Invalid email address";
         break;
@@ -122,7 +134,7 @@ class LoginForm extends React.Component {
   back(){
     this.props.history.push("/HomePage");
 }
- 
+  
 
   render() {
     const { formErrors } = this.state;
@@ -131,22 +143,23 @@ class LoginForm extends React.Component {
       
       <div className="wrapper">
       <div className="form-wrapper">
-        
-        <div>
+
+      <div>
           <div>
                             <img
                                 className="d-block w-100"
-                                src={Img4}
+                                src={Img13}
                                 alt="First slide"
-                                width="10"
+                                width="7"
                                 height="300"
                             />
                             </div>
                            
           </div>
+      
           <form onSubmit={this.handleSubmit} noValidate>
           
-          <h2>Login form</h2>
+          <h2>Admin Login</h2>
           
             <br/>
             <br/>
@@ -154,15 +167,14 @@ class LoginForm extends React.Component {
             <div className="email">
               <label htmlFor="email">Email</label>
               <input
-                className={formErrors.emailId.length > 0 ? "error" : null}
+                className={formErrors.adminId.length > 0 ? "error" : null}
                 type="email"
-                name="emailId"
-                value={this.state.emailId}
+                name="adminId"
                 noValidate
                 onChange={this.handleChange}
               />
-              {formErrors.emailId.length > 0 && (
-                <span className="errorMessage">{formErrors.emailId}</span>
+              {formErrors.adminId.length > 0 && (
+                <span className="errorMessage">{formErrors.email}</span>
               )}
             </div>
             <div className="password">
@@ -171,7 +183,6 @@ class LoginForm extends React.Component {
                 className={formErrors.password.length > 0 ? "error" : null}
                 type="password"
                 name="password"
-                value={this.state.password}
                 noValidate
                 onChange={this.handleChange}
               />
@@ -193,4 +204,4 @@ class LoginForm extends React.Component {
   }
 }
 
-export default LoginForm;
+export default AdminLogin;

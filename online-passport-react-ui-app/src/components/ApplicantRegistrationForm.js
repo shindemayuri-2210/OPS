@@ -1,6 +1,9 @@
-import React from 'react';
+import React,{Component} from 'react'
 import { Button } from 'react-bootstrap';
 import './ApplicationForm.css'
+import ApplicantService from '../services/ApplicantService'
+import {Link} from 'react-router-dom';
+import Img16 from '../Images/img16.jpeg';
 
 
 const emailRegex = RegExp(
@@ -29,7 +32,7 @@ const formValid = ({ formErrors, ...rest }) => {
 
 
 
-class ApplicantRegistrationForm extends React.Component {
+class ApplicantRegistrationForm extends Component {
   constructor(props) {
     super(props);
 
@@ -37,18 +40,41 @@ class ApplicantRegistrationForm extends React.Component {
      
       firstName: null,
       lastName: null,
-      email: null,
+      emailId: null,
       password: null,
       formErrors: {
       
            firstName: "",
            lastName: "",
-           email: "",
-           password: "",
-        
+           emailId: "",
+           password: "", 
       }
     };
+
+    this.saveApplicant=this.saveApplicant.bind(this);
   }
+    componentDidMount(){
+
+      // step 4
+      if(this.state.applicantId === '_add'){
+          return
+      }
+  }
+  saveApplicant = (e) => {
+    e.preventDefault();
+    let applicant = {firstName: this.state.firstName, lastName: this.state.lastName, emailId: this.state.emailId, password: this.state.password};
+    console.log('applicant => ' + JSON.stringify(applicant));
+
+    // step 5
+    
+        ApplicantService.createNewApplicant(applicant).then(res =>{
+           alert("REGISTRATION SUCCESSFULL!! PLEASE LOGIN");
+            this.props.history.push('/LoginForm');
+        });
+        
+    }
+    
+  
 
   handleSubmit = e => {
     e.preventDefault();
@@ -59,7 +85,7 @@ class ApplicantRegistrationForm extends React.Component {
         First Name: ${this.state.firstName}
 
         Last Name: ${this.state.lastName}
-        Email: ${this.state.email}
+        Email: ${this.state.emailId}
         Password: ${this.state.password}
       `);
     } else {
@@ -86,15 +112,15 @@ class ApplicantRegistrationForm extends React.Component {
         break;
 
         
-      case "email":
-        formErrors.email = emailRegex.test(value)
+      case "emailId":
+        formErrors.emailId = emailRegex.test(value)
           ? ""
           : "*Invalid email address";
         break;
       case "password":
         formErrors.password =passwordRegex.test(value)
         ? ""
-        : "*Invalid password! Minimum 8 characters required";
+        : "*Invalid password! Please check password policy";
         break;
       default:
         break;
@@ -102,6 +128,11 @@ class ApplicantRegistrationForm extends React.Component {
 
     this.setState({ formErrors, [name]: value }, () => console.log(this.state));
   };
+
+  back(){
+    this.props.history.push("/LoginForm");
+  }
+
 
   
 
@@ -113,14 +144,29 @@ class ApplicantRegistrationForm extends React.Component {
       <div className="wrapper">
       <div className="form-wrapper">
       
+      <div>
+          <div>
+                            <img
+                                className="d-block w-100"
+                                src={Img16}
+                                alt="First slide"
+                                width="2"
+                                height="500"
+                            />
+                            </div>
+                           
+          </div>
+
+
           <form onSubmit={this.handleSubmit} noValidate>
-          <h2>Registration form</h2>
+             <h2>Registration form</h2>
             <div className="firstName">
               <label htmlFor="firstName">First Name</label>
               <input
                 className={formErrors.firstName.length > 0 ? "error" : null}
                 type="text"
                 name="firstName"
+                value={this.state.firstName}
                 noValidate
                 onChange={this.handleChange}
               />
@@ -136,6 +182,7 @@ class ApplicantRegistrationForm extends React.Component {
                 type="text"
                 name="lastName"
                 noValidate
+                value={this.state.lastName}
                 onChange={this.handleChange}
               />
               {formErrors.lastName.length > 0 && (
@@ -146,14 +193,15 @@ class ApplicantRegistrationForm extends React.Component {
             <div className="email">
               <label htmlFor="email">Email</label>
               <input
-                className={formErrors.email.length > 0 ? "error" : null}
+                className={formErrors.emailId.length > 0 ? "error" : null}
                 type="email"
-                name="email"
+                name="emailId"
                 noValidate
+                value={this.state.emailId}
                 onChange={this.handleChange}
               />
-              {formErrors.email.length > 0 && (
-                <span className="errorMessage">{formErrors.email}</span>
+              {formErrors.emailId.length > 0 && (
+                <span className="errorMessage">{formErrors.emailId}</span>
               )}
             </div>
             <div className="password">
@@ -163,22 +211,24 @@ class ApplicantRegistrationForm extends React.Component {
                 type="password"
                 name="password"
                 noValidate
+                value={this.state.password}
                 onChange={this.handleChange}
               />
               {formErrors.password.length > 0 && (
                 <span className="errorMessage">{formErrors.password}</span>
               )}
             </div>
-            <Button variant="primary" name="register" value="REGISTER">REGISTER</Button>
-            {'\u00A0'}{'\u00A0'}Already registered?{'\u00A0'}{'\u00A0'} <Button variant="primary" name="login" value="LOGIN">LOGIN</Button>
-
-          
+            <Button variant="primary" name="register" value="REGISTER" onClick={this.saveApplicant}>REGISTER</Button>
+            {'\u00A0'}{'\u00A0'}Already registered?{'\u00A0'}{'\u00A0'} <Button variant="primary" name="login" value="LOGIN" onClick={() => this.back()}>LOGIN</Button>
+         <div>   
+           <div><br/>{'\u00A0'}{'\u00A0'} {'\u00A0'}{'\u00A0'}<Link to="/PasswordPolicy"><u>check password policy</u></Link></div></div>
           </form>
           </div>
           </div>
         
-    );
+    )
   }
 }
+
 
 export default ApplicantRegistrationForm;

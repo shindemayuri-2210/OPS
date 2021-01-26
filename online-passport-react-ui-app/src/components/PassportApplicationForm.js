@@ -2,12 +2,16 @@
 
 import './PassportApplicationForm.css';
 import React from 'react';
+import { Button } from 'react-bootstrap';
+import PassportApplicationService from '../services/PassportApplicationService'
 
-
+const panRegex = RegExp(
+  /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/
+);
 
 
 const emailRegex = RegExp(
-  /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+  /^[a-zA-Z0-9.!#$%&’+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)$/
 );
 
 const mobileRegex = RegExp(
@@ -58,6 +62,7 @@ class Form extends React.Component {
     super(props);
 
     this.state = {
+      panNo:null,
       zipCode:null,
       fatherFirstName:null,
       fatherMiddleName:null,
@@ -70,17 +75,18 @@ class Form extends React.Component {
       middleName:null,
       lastName: null,
       email: null,
-      password: null,
+      mobileNo1:null,
       mobileNo:null,
       dateBirth:null,
       formErrors: {
+        panNo:"",
         zipCode:"",
         aadharNo:"",
         firstName: "",
         middleName:"",
         lastName: "",
         email: "",
-        password: "",
+        mobileNo1:"",
         birthVillage:"",
         fatherFirstName:"",
       fatherMiddleName:"",
@@ -92,7 +98,28 @@ class Form extends React.Component {
       dateBirth:""
       }
     };
+    this.savePassportApplication=this.savePassportApplication.bind(this);
   }
+
+  componentDidMount(){
+
+    // step 4
+    if(this.state.passportapplicantId === '_add'){
+        return
+    }
+}
+savePassportApplication = (e) => {
+  e.preventDefault();
+  let application = {firstName: this.state.firstName, lastName: this.state.lastName};
+  console.log('application => ' + JSON.stringify(application));
+
+  PassportApplicationService.createNewPassportApplication(application).then(res =>{
+    alert("REGISTRATION SUCCESSFULL!! PLEASE LOGIN");
+     this.props.history.push('/LoginForm');
+ });
+ 
+}
+
 
   handleSubmit = e => {
     e.preventDefault();
@@ -117,43 +144,48 @@ class Form extends React.Component {
     let formErrors = { ...this.state.formErrors };
 
     switch (name) {
+      case "panNo":
+          formErrors.panNo = panRegex.test(value)
+          ? ""
+          : "Enter valid pan no";
+          break;
 
       
 
         case "fatherFirstName":
           formErrors.fatherFirstName = nameRegex.test(value)
           ? ""
-          : "name cannot contain digits";
+          : "Name cannot contain digits";
           break;
 
         case "fatherMiddleName":
-          formErrors.fatherMiddletName = nameRegex.test(value)
+          formErrors.fatherMiddleName = nameRegex.test(value)
           ? ""
-          : "name cannot contain digits";
+          : "Name cannot contain digits";
           break;
 
         case "fatherLastName":
-          formErrors.fatherLasttName = nameRegex.test(value)
+          formErrors.fatherLastName = nameRegex.test(value)
           ? ""
-          : "name cannot contain digits";
+          : "Name cannot contain digits";
           break;
 
         case "motherFirstName":
           formErrors.motherFirstName = nameRegex.test(value)
           ? ""
-          : "name cannot contain digits";
+          : "Name cannot contain digits";
           break;
 
         case "motherMiddleName":
           formErrors.motherMiddleName = nameRegex.test(value)
           ? ""
-          : "name cannot contain digits";
+          : "Name cannot contain digits";
           break;
 
         case "motherLastName":
           formErrors.motherLastName = nameRegex.test(value)
           ? ""
-          : "name cannot contain digits";
+          : "Name cannot contain digits";
           break;
 
 
@@ -168,7 +200,7 @@ class Form extends React.Component {
       case "firstName":
         formErrors.firstName = nameRegex.test(value)
           ? ""
-          : "name cannot contain digits";
+          : "Name cannot contain digits";
           break;
 
           case "zipCode":
@@ -182,41 +214,44 @@ class Form extends React.Component {
         case "middleName":
           formErrors.middleName = nameRegex.test(value)
           ? ""
-          : "name cannot contain digits";
+          : "Name cannot contain digits";
           break;
 
       case "lastName":
         formErrors.lastName = nameRegex.test(value)
           ? ""
-          : "name cannot contain digits";
+          : "Name cannot contain digits";
           break;
 
         case "birthVillage":
         formErrors.birthVillage =
-          value.length < 2 ? "minimum 2 characaters required" : "";
+          value.length < 2 ? "Minimum 2 characaters required" : "";
         break;
         
         case "dateBirth":
           formErrors.dateBirth = dateRegex.test(value)
             ? ""
-            : "invalid date";
+            : "Invalid date";
           break;
         
       case "email":
         formErrors.email = emailRegex.test(value)
           ? ""
-          : "invalid email address";
+          : "Invalid email address";
         break;
         
         case "mobileNo":
         formErrors.mobileNo = mobileRegex.test(value)
           ? ""
-          : "invalid mobile number";
+          : "Invalid mobile number";
         break;
-      case "password":
-        formErrors.password =
-          value.length < 6 ? "minimum 6 characaters required" : "";
+
+        case "mobileNo1":
+        formErrors.mobileNo1 = mobileRegex.test(value)
+          ? ""
+          : "Invalid mobile number";
         break;
+      
       default:
         break;
     }
@@ -231,18 +266,18 @@ class Form extends React.Component {
 
     return (
       
-      <div className="wrapper">
-      <div className="form-wrapper">
-           
+      <div id="forms">
+      <div>
+      
           <form onSubmit={this.handleSubmit} noValidate>
           
-          <h1>NEW PASSPORT APPLICATION</h1>
-          <div>
+          <h2>NEW PASSPORT APPLICATION</h2>
+          
           <h2>Service Details</h2>
           <div className="typeAppl">  
-            <label>Type of Application
+          <label>Type of Application
             <select value={this.state.application} onChange={this.handleSubmit}> 
-            <option name=''>Select Gender</option>
+            <option name=''>Select Type of Application</option>
                   <option name="normal"> Normal</option>
                   <option name="tatkaal">Tatkaal</option>
               </select>
@@ -250,7 +285,7 @@ class Form extends React.Component {
 
           </div>    
           <div className="bookletType">  
-            <label>Type of Passport Booklet
+            <label>Type of Booklet
             <select value={this.state.application} onChange={this.handleSubmit}> 
             <option name=''>Select Booklet Type</option>
                   <option name="36pages">36 Pages</option>
@@ -260,14 +295,14 @@ class Form extends React.Component {
 
           </div>
           
-          </div>
+          
           
           <h2>Applicant Details</h2>
-            <div className="firstName">
+            <div className="firstName1">
               <label htmlFor="firstName">Applicant's First Name</label>
               <input
                 className={formErrors.firstName.length > 0 ? "error" : null}
-                placeholder="Applicant First Name"
+                
                 type="text"
                 name="firstName"
                 noValidate
@@ -282,7 +317,7 @@ class Form extends React.Component {
               <label htmlFor="middleName">Middle Name</label>
               <input
                 className={formErrors.middleName.length > 0 ? "error" : null}
-                placeholder="Middle Name"
+               // placeholder="Middle Name"
                 type="text"
                 name="middleName"
                 noValidate
@@ -293,11 +328,11 @@ class Form extends React.Component {
               )}
               </div>
             
-            <div className="lastName">
+            <div className="lastName1">
               <label htmlFor="lastName">Last Name</label>
               <input
                 className={formErrors.lastName.length > 0 ? "error" : null}
-                placeholder="Last Name"
+              //  placeholder="Last Name"
                 type="text"
                 name="lastName"
                 noValidate
@@ -308,12 +343,12 @@ class Form extends React.Component {
               )}
             </div>
             
-            <div className="email">
+            <div className="email1">
               <label htmlFor="email">Email</label>
               <input
                 className={formErrors.email.length > 0 ? "error" : null}
-                placeholder="Email"
-                type="email"
+                //placeholder="Email"
+                type="text"
                 name="email"
                 noValidate
                 onChange={this.handleChange} 
@@ -322,21 +357,7 @@ class Form extends React.Component {
                 <span className="errorMessage">{formErrors.email}</span>
               )}
             </div>
-            <div className="password">
-              <label htmlFor="password">Password</label>
-              <input
-                className={formErrors.password.length > 0 ? "error" : null}
-                placeholder="Password"
-                type="password"
-                name="password"
-                noValidate
-                onChange={this.handleChange}
-              />
-              {formErrors.password.length > 0 && (
-                <span className="errorMessage">{formErrors.password}</span>
-              )}
-            </div>
-
+            
             <div className="gender">  
             <label>Gender
             <select value={this.state.gender} onChange={this.handleSubmit}> 
@@ -398,7 +419,7 @@ class Form extends React.Component {
               <label htmlFor="dateBirth">Date of birth</label>
               <input
                 className={formErrors.dateBirth.length > 0 ? "error" : null}
-                placeholder="Date of Birth(dd-mm-yyyy )"
+              //  placeholder="Date of Birth(dd-mm-yyyy )"
                 type="text"
                 name="dateBirth"
                 noValidate
@@ -503,7 +524,7 @@ class Form extends React.Component {
               <label htmlFor="birthVillage">Birth Village or Town or City</label>
               <input
                 className={formErrors.birthVillage.length > 0 ? "error" : null}
-                placeholder="Birth Village or Town or City"
+                //placeholder="Birth Village or Town or City"
                 type="text"
                 name="birthVillage"
                 noValidate
@@ -518,7 +539,7 @@ class Form extends React.Component {
               <label htmlFor="aadharNo">Aadhar Number</label>
               <input
                 className={formErrors.aadharNo.length > 0 ? "error" : null}
-                placeholder="Aadhar Number"
+                //placeholder="Aadhar Number"
                 type="text"
                 name="aadharNo"
                 noValidate
@@ -528,12 +549,28 @@ class Form extends React.Component {
                 <span className="errorMessage">{formErrors.aadharNo}</span>
               )}
               </div>
+
+            <div className="panNo">
+              <label htmlFor="panNo">Pan Number</label>
+              <input
+                className={formErrors.panNo.length > 0 ? "error" : null}
+                //placeholder="Pan Number"
+                type="text"
+                name="panNo"
+                noValidate
+                onChange={this.handleChange}
+              />
+                {formErrors.panNo.length > 0 && (
+                <span className="errorMessage">{formErrors.panNo}</span>
+              )}
+              </div>
+
               <h2>Family Details</h2>
               <div className="fatherFirstName">
               <label htmlFor="fatherFirstName">Father's First Name</label>
               <input
                 className={formErrors.fatherFirstName.length > 0 ? "error" : null}
-                placeholder="Father's First Name"
+                //placeholder="Father's First Name"
                 type="text"
                 name="fatherFirstName"
                 noValidate
@@ -548,7 +585,7 @@ class Form extends React.Component {
               <label htmlFor="fatherMiddleName">Middle Name</label>
               <input
                 className={formErrors.fatherMiddleName.length > 0 ? "error" : null}
-                placeholder="Father's Middle Name"
+                //placeholder="Father's Middle Name"
                 type="text"
                 name="fatherMiddleName"
                 noValidate
@@ -563,7 +600,7 @@ class Form extends React.Component {
               <label htmlFor="fatherLastName">Father's Last Name</label>
               <input
                 className={formErrors.fatherLastName.length > 0 ? "error" : null}
-                placeholder="Father's Last Name"
+                //placeholder="Father's Last Name"
                 type="text"
                 name="fatherLastName"
                 noValidate
@@ -578,7 +615,7 @@ class Form extends React.Component {
               <label htmlFor="motherFirstName">Mother's First Name</label>
               <input
                 className={formErrors.motherFirstName.length > 0 ? "error" : null}
-                placeholder="Mother's   First Name"
+                //placeholder="Mother's   First Name"
                 type="text"
                 name="motherFirstName"
                 noValidate
@@ -593,7 +630,7 @@ class Form extends React.Component {
               <label htmlFor="motherMiddleName"> Mother's Middle Name</label>
               <input
                 className={formErrors.motherMiddleName.length > 0 ? "error" : null}
-                placeholder="Mother's Middle Name"
+             //   placeholder="Mother's Middle Name"
                 type="text"
                 name="motherMiddleName"
                 noValidate
@@ -608,7 +645,7 @@ class Form extends React.Component {
               <label htmlFor="motherLastName">Mother's Last Name</label>
               <input
                 className={formErrors.motherLastName.length > 0 ? "error" : null}
-                placeholder="Mothers's Last Name"
+               // placeholder="Mothers's Last Name"
                 type="text"
                 name="motherLastName"
                 noValidate
@@ -638,7 +675,7 @@ class Form extends React.Component {
               <label htmlFor="houseNo">House No. and Street Name </label>
               <input
                 
-                placeholder="House No. and Street Name"
+               // placeholder="House No. and Street Name"
                 type="text"
                 name="houseNo"
                 noValidate
@@ -650,7 +687,7 @@ class Form extends React.Component {
               <label htmlFor="houseNo">Village Or Town Or City </label>
               <input
                 
-                placeholder="Village Or Town Or City"
+                //placeholder="Village Or Town Or City"
                 type="text"
                 name="village"
                 noValidate
@@ -662,7 +699,7 @@ class Form extends React.Component {
               <label htmlFor="state">State/ Province</label>
               <input
                 
-                placeholder="State/ Province"
+                //placeholder="State/ Province"
                 type="text"
                 name="state"
                 noValidate
@@ -671,10 +708,10 @@ class Form extends React.Component {
               </div>
 
               <div className="district">
-              <label htmlFor="state">District</label>
+              <label htmlFor="district">District</label>
               <input
                 
-                placeholder="District"
+               // placeholder="District"
                 type="text"
                 name="district"
                 noValidate
@@ -682,18 +719,18 @@ class Form extends React.Component {
               />
               </div>
 
-              <div className="mobileNo">
-              <label htmlFor="mobileNo">Mobile Number</label>
+              <div className="mobileNo1">
+              <label htmlFor="mobileNo1">Mobile Number</label>
               <input
-                className={formErrors.mobileNo.length > 0 ? "error" : null}
-                placeholder="Mobile Number"
+                className={formErrors.mobileNo1.length > 0 ? "error" : null}
+               // placeholder="Mobile Number"
                 type="text"
-                name="mobileNo"
+                name="mobileNo1"
                 noValidate
                 onChange={this.handleChange}
               />
-               {formErrors.mobileNo.length > 0 && (
-                <span className="errorMessage">{formErrors.mobileNo}</span>
+               {formErrors.mobileNo1.length > 0 && (
+                <span className="errorMessage">{formErrors.mobileNo1}</span>
               )}
               </div>
 
@@ -701,7 +738,7 @@ class Form extends React.Component {
               <label htmlFor="state">Pin Code / Zip Code</label>
               <input
                 className={formErrors.zipCode.length > 0 ? "error" : null}
-                placeholder="Pin Code / Zip Code"
+               // placeholder="Pin Code / Zip Code"
                 type="text"
                 name="zipCode"
                 noValidate
@@ -712,20 +749,8 @@ class Form extends React.Component {
               )}
               </div>
 
-              <div className="email">
-              <label htmlFor="email">Email</label>
-              <input
-                className={formErrors.email.length > 0 ? "error" : null}
-                placeholder="Email"
-                type="email"
-                name="email"
-                noValidate
-                onChange={this.handleChange}
-              />
-              {formErrors.email.length > 0 && (
-                <span className="errorMessage">{formErrors.email}</span>
-              )}
-            </div>
+              
+          
 
             <div className="permenantAddress">  
             <label> Do You Have a Permanent Address?
@@ -750,19 +775,20 @@ class Form extends React.Component {
               <label htmlFor="nameAddress">Name And Address</label>
               <input
               
-                placeholder="Name and Address"
+               // placeholder="Name and Address"
                 type="text"
                 name="nameAddress"
                 noValidate
                 onChange={this.handleChange}
               />
+              </div>
               
-              <div className="email">
+              <div className="email1">
               <label htmlFor="email">Email</label>
               <input
                 className={formErrors.email.length > 0 ? "error" : null}
-                placeholder="Email"
-                type="email"
+               // placeholder="Email"
+                type="text"
                 name="email"
                 noValidate
                 onChange={this.handleChange}
@@ -771,12 +797,12 @@ class Form extends React.Component {
                 <span className="errorMessage">{formErrors.email}</span>
               )}
             </div>
-            </div>
+            
             <div className="mobileNo">
               <label htmlFor="mobileNo">Mobile Number</label>
               <input
-                
-                placeholder="Mobile Number"
+                className={formErrors.mobileNo.length > 0 ? "error" : null}
+                //placeholder="Mobile Number"
                 type="text"
                 name="mobileNo"
                 noValidate
@@ -788,12 +814,11 @@ class Form extends React.Component {
               )}            
               </div>
              
+              <Button variant="primary" name="submit" value="SUBMIT" onClick={this.savePassportApplication}>Submit</Button>
+              
 
-
-            <div className="createAccount">
-              <button type="submit">Submitt</button>
-
-            </div>
+            
+            
           </form>
           </div>
           </div>
@@ -803,3 +828,4 @@ class Form extends React.Component {
 }
 
 export default Form;
+
